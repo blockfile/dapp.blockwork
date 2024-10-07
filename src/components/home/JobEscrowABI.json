@@ -1,0 +1,305 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_usdtTokenAddress",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jobId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "applicant",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "userName",
+                "type": "string"
+            }
+        ],
+        "name": "ApplicantAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jobId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "applicant",
+                "type": "address"
+            }
+        ],
+        "name": "ApplicantApproved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jobId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "applicant",
+                "type": "address"
+            }
+        ],
+        "name": "ApplicantRevoked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jobId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "poster",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "JobPosted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jobId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "applicant",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "PaymentReleased",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jobId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "poster",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RefundIssued",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_jobId", "type": "uint256" },
+            {
+                "internalType": "address",
+                "name": "_applicantWallet",
+                "type": "address"
+            },
+            { "internalType": "string", "name": "_userName", "type": "string" },
+            {
+                "internalType": "string",
+                "name": "_coverLetter",
+                "type": "string"
+            }
+        ],
+        "name": "addApplicant",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_jobId", "type": "uint256" },
+            {
+                "internalType": "address",
+                "name": "_applicantWallet",
+                "type": "address"
+            }
+        ],
+        "name": "approveApplicant",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "jobCount",
+        "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+        ],
+        "name": "jobs",
+        "outputs": [
+            { "internalType": "address", "name": "poster", "type": "address" },
+            { "internalType": "uint256", "name": "amount", "type": "uint256" },
+            { "internalType": "string", "name": "title", "type": "string" },
+            {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            { "internalType": "bool", "name": "isCompleted", "type": "bool" },
+            {
+                "internalType": "bool",
+                "name": "paymentVerified",
+                "type": "bool"
+            },
+            { "internalType": "bool", "name": "isRefunded", "type": "bool" },
+            {
+                "internalType": "address",
+                "name": "approvedApplicantWallet",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+            { "internalType": "string", "name": "_title", "type": "string" },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            },
+            {
+                "internalType": "string[]",
+                "name": "_skills",
+                "type": "string[]"
+            }
+        ],
+        "name": "postJob",
+        "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_jobId", "type": "uint256" },
+            {
+                "internalType": "address",
+                "name": "_newApplicantWallet",
+                "type": "address"
+            }
+        ],
+        "name": "reassignApplicant",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_jobId", "type": "uint256" }
+        ],
+        "name": "refund",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_jobId", "type": "uint256" }
+        ],
+        "name": "releasePayment",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_jobId", "type": "uint256" }
+        ],
+        "name": "revokeApplicant",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "usdtToken",
+        "outputs": [
+            { "internalType": "contract IERC20", "name": "", "type": "address" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

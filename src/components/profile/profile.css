@@ -1,0 +1,23 @@
+/* Add this to your global CSS or Tailwind configuration if the scrollbar plugin is installed */
+
+.scrollbar-thin {
+    scrollbar-width: thin;
+}
+
+.scrollbar-thumb-gray-600 {
+    scrollbar-color: #4a4a4a transparent;
+}
+
+.scrollbar-thumb-rounded {
+    border-radius: 9999px;
+}
+
+/* For WebKit-based browsers */
+.scrollbar-thin::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+    border-radius: 9999px;
+}
