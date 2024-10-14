@@ -249,12 +249,17 @@ function WorkView() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-100">
+        <div className="min-h-screen flex flex-col ">
             {/* Include Navbar at the top */}
             <Navbar />
 
             {/* Main content container */}
-            <div className="max-w-5xl mx-auto p-6 bg-white border border-gray-200 shadow-lg rounded-lg mt-6 pb-5 mb-5">
+            <div
+                className="max-w-5xl mx-auto p-6  border bg-gray-900  border-gray-200 shadow-lg rounded-lg mt-6 pb-5 mb-5"
+                style={{
+                    backgroundImage:
+                        "radial-gradient(120% 80% at 50% 0%, transparent 10%, rgba(0, 59, 117, 0.3) 80%)",
+                }}>
                 {job.banner && (
                     <div className="mb-4">
                         <img
@@ -277,7 +282,7 @@ function WorkView() {
                 <div className="flex items-center justify-center mb-4">
                     <div className="flex items-center">
                         <div>
-                            <h1 className="text-2xl font-semibold">
+                            <h1 className="font-semibold text-center text-3xl">
                                 {job.title}
                             </h1>
                             <p className="text-gray-600">{job.walletAddress}</p>
@@ -419,7 +424,7 @@ function WorkView() {
                                                     Release Payment
                                                 </button>
                                                 <select
-                                                    className="bg-white border border-gray-300 px-4 py-2 rounded ml-2"
+                                                    className="bg-white border border-gray-300 px-4 py-2 rounded ml-2 text-black"
                                                     value={newApplicantWallet}
                                                     onChange={(e) =>
                                                         setNewApplicantWallet(

@@ -15,7 +15,31 @@ export const WalletProvider = ({ children }) => {
         location: "",
         gender: "",
     });
+    const [tokenBalance, setTokenBalance] = useState(0); // Add tokenBalance state
 
+    // Fetch the token balance
+    const fetchTokenBalance = async (walletAddress) => {
+        const apiKey = "JUDPV627WC6YPRF9PJ992PQ4MMAIZVCDVV"; // Replace with your BscScan API key
+        const contractAddress = "0x367bDd60b45334e35252f4eB3c4bDCcC59F2eB5c"; // Your token's contract address
+        const url = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${contractAddress}&address=${walletAddress}&tag=latest&apikey=${apiKey}`;
+
+        try {
+            const response = await axios.get(url);
+            if (response.data && response.data.result) {
+                const balanceStr = response.data.result;
+                const tokenDecimal = 18; // Replace with your token's decimal places
+                const balance =
+                    parseFloat(balanceStr) / Math.pow(10, tokenDecimal);
+                setTokenBalance(balance); // Update token balance state
+            } else {
+                console.error("No token data found.");
+                setTokenBalance(0); // If no data, set balance to 0
+            }
+        } catch (error) {
+            console.error("Error fetching token balance:", error);
+            setTokenBalance(0); // If error, set balance to 0
+        }
+    };
     // const connectWallet = async () => {
     //     if (window.ethereum) {
     //         try {
@@ -55,7 +79,7 @@ export const WalletProvider = ({ children }) => {
     //         alert("Please install MetaMask!");
     //     }
     // };
-
+    // Uncommented version of connectWallet
     const connectWallet = async () => {
         if (window.ethereum) {
             try {
@@ -130,6 +154,9 @@ export const WalletProvider = ({ children }) => {
                     }));
                     setWalletConnected(true);
 
+                    // Fetch token balance after wallet is connected
+                    await fetchTokenBalance(account);
+
                     // Check if the user exists in the database, if not, create the user
                     try {
                         const response = await axios.post(
@@ -190,6 +217,9 @@ export const WalletProvider = ({ children }) => {
                         } catch (error) {
                             console.error("Error fetching user data:", error);
                         }
+
+                        // Fetch token balance on page load
+                        await fetchTokenBalance(account);
                     } else {
                         setWalletConnected(false);
                     }
@@ -205,7 +235,7 @@ export const WalletProvider = ({ children }) => {
         checkWalletConnection();
 
         // Listen for account changes
-        window.ethereum?.on("accountsChanged", (accounts) => {
+        window.ethereum?.on("accountsChanged", async (accounts) => {
             if (accounts.length > 0) {
                 const account = getAddress(accounts[0]);
                 setUser((prevUser) => ({
@@ -216,19 +246,18 @@ export const WalletProvider = ({ children }) => {
                 setWalletConnected(true);
 
                 // Fetch updated user data for the new wallet address
-                axios
-                    .post(
+                try {
+                    const response = await axios.post(
                         "http://localhost:3001/usersJobs/create-or-get-user",
-                        {
-                            walletAddress: account,
-                        }
-                    )
-                    .then((response) => {
-                        updateUserProfile(response.data);
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching user data:", error);
-                    });
+                        { walletAddress: account }
+                    );
+                    updateUserProfile(response.data);
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+
+                // Fetch token balance after account switch
+                await fetchTokenBalance(account);
             } else {
                 setWalletConnected(false);
                 setUser({
@@ -239,6 +268,7 @@ export const WalletProvider = ({ children }) => {
                     location: "",
                     gender: "",
                 });
+                setTokenBalance(0); // Reset token balance
             }
         });
     }, []);
@@ -250,6 +280,7 @@ export const WalletProvider = ({ children }) => {
                 user,
                 connectWallet,
                 updateUserProfile,
+                tokenBalance, // Provide token balance in the context
             }}>
             {children}
         </WalletContext.Provider>

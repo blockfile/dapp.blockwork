@@ -5,7 +5,7 @@ const PortfolioModal = ({ isOpen, onClose, portfolioItem }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-lg">
+            <div className="bg-white p-6 rounded-lg w-full max-w-lg text-black">
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">
                     {portfolioItem.title}
                 </h3>

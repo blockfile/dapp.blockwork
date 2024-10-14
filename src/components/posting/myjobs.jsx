@@ -30,10 +30,6 @@ function MyAppliedJobs() {
         }
     }, [user.walletAddress]);
 
-    if (loading) {
-        return <div>Loading your applied jobs...</div>;
-    }
-
     // Function to determine the application status and if the job is complete
     const getApplicationStatus = (job) => {
         if (job.isComplete) {
@@ -71,11 +67,19 @@ function MyAppliedJobs() {
                     Jobs Application
                 </h1>
                 {appliedJobs.length > 0 ? (
-                    <div className="w-full max-w-4xl px-5">
+                    <div
+                        className="w-full max-w-4xl px-5"
+                        style={{
+                            clipPath:
+                                "polygon(1.05% 0, 97% 0, 100% 16%, 100% 100%, 0 100%, 0 85%, 1.05% 74%)", // Custom polygon clip-path
+                            backgroundImage:
+                                "radial-gradient(120% 80% at 50% 0%, transparent 10%, rgba(0, 59, 117, 0.3) 80%)",
+                            boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)", // Embossing effect
+                        }}>
                         {appliedJobs.map((job) => (
                             <div
                                 key={job._id}
-                                className="border p-4 mb-4 rounded-lg shadow-md">
+                                className=" p-4 mb-4 rounded-lg shadow-md">
                                 <Link to={`/workview/${job._id}`}>
                                     <h2 className="text-xl font-bold text-blue-600 hover:underline cursor-pointer">
                                         {job.title}

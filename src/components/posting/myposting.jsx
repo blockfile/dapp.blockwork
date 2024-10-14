@@ -31,10 +31,6 @@ function MyPosting() {
         }
     }, [user.walletAddress]);
 
-    if (loading) {
-        return <div>Loading your posted jobs...</div>;
-    }
-
     // Function to determine job status based on usersApplied and isComplete
     const getJobStatus = (job) => {
         if (job.status === "refunded") {
@@ -62,50 +58,77 @@ function MyPosting() {
             <Navbar />
 
             {/* Main content */}
-            <div className="flex flex-col items-center mt-8">
+            <div className="flex flex-col items-center mt-8 font-orbitron">
                 <h1 className="text-2xl font-semibold mb-6">My Posted Jobs</h1>
                 {jobs.length > 0 ? (
-                    <div className="w-full max-w-4xl px-5">
+                    <div className="w-full max-w-3xl px-5">
                         {jobs.map((job) => (
                             <div
                                 key={job._id}
-                                className="border p-4 mb-4 rounded-lg shadow-md">
-                                <Link to={`/workview/${job._id}`}>
-                                    <h2 className="text-xl font-bold text-blue-600 hover:underline cursor-pointer">
-                                        {job.title}
-                                    </h2>
-                                </Link>
-                                <p className="text-gray-600">
-                                    Budget: ${job.budget}
-                                </p>
-                                <p>{job.description}</p>
-                                <div className="flex flex-wrap mt-2">
-                                    {job.skills.map((tag, index) => (
-                                        <span
-                                            key={index}
-                                            className="bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                                            {tag}
-                                        </span>
-                                    ))}
+                                className="relative mb-4 p-4 text-left bg-black text-white shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-95"
+                                style={{
+                                    clipPath:
+                                        "polygon(1.05% 0, 97% 0, 100% 16%, 100% 100%, 0 100%, 0 85%, 1.05% 74%)", // Custom polygon clip-path
+                                    backgroundImage:
+                                        "radial-gradient(120% 80% at 50% 0%, transparent 10%, rgba(0, 59, 117, 0.3) 80%)",
+                                    boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)", // Embossing effect
+                                }}>
+                                <div className="flex items-center space-x-4">
+                                    {/* Left-side (Image/Avatar) */}
+                                    <div className=" w-1/4">
+                                        {job.logo ? (
+                                            <img
+                                                src={job.logo}
+                                                alt={`${job.title} Logo`}
+                                                className="object-cover w-full h-auto rounded-md"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-32 bg-gray-600 rounded-md"></div>
+                                        )}
+                                    </div>
+
+                                    {/* Right-side (Details) */}
+                                    <div className="w-1/2">
+                                        <Link to={`/workview/${job._id}`}>
+                                            <h2 className="text-xl font-semibold mb-2 text-white hover:underline cursor-pointer">
+                                                {job.title}
+                                            </h2>
+                                        </Link>
+                                        <p className="text-gray-400 text-sm mb-1">
+                                            Budget: ${job.budget}
+                                        </p>
+                                        <p className="text-gray-400 text-sm mb-1">
+                                            Status:{" "}
+                                            <span
+                                                className={
+                                                    getJobStatus(job) ===
+                                                    "Completed"
+                                                        ? "text-green-600"
+                                                        : getJobStatus(job) ===
+                                                          "Refunded"
+                                                        ? "text-red-600"
+                                                        : getJobStatus(
+                                                              job
+                                                          ).includes(
+                                                              "In Progress"
+                                                          )
+                                                        ? "text-yellow-600"
+                                                        : "text-blue-600"
+                                                }>
+                                                {getJobStatus(job)}
+                                            </span>
+                                        </p>
+                                        <div className="mt-2 flex flex-wrap">
+                                            {job.skills.map((tag, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="bg-blue-600 text-white text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className="mt-2 text-gray-700">
-                                    Status:{" "}
-                                    <span
-                                        className={
-                                            getJobStatus(job) === "Completed"
-                                                ? "text-green-600"
-                                                : getJobStatus(job) ===
-                                                  "Refunded"
-                                                ? "text-red-600" // Refunded will be displayed in red
-                                                : getJobStatus(job).includes(
-                                                      "In Progress"
-                                                  )
-                                                ? "text-yellow-600"
-                                                : "text-blue-600"
-                                        }>
-                                        {getJobStatus(job)}
-                                    </span>
-                                </p>
                             </div>
                         ))}
                     </div>

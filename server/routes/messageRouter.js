@@ -57,10 +57,13 @@ router.get("/conversations", async (req, res) => {
 
 // Save a new message or update conversation based on jobId
 router.post("/", async (req, res) => {
-    const { senderWallet, jobId, content } = req.body;
+    const { senderWallet, jobId, content, attachment } = req.body;
 
-    if (!senderWallet || !jobId || !content) {
-        return res.status(400).json({ message: "All fields are required." });
+    // Ensure either content or attachment is provided
+    if (!senderWallet || !jobId || (!content && !attachment)) {
+        return res
+            .status(400)
+            .json({ message: "Either content or attachment is required." });
     }
 
     try {
@@ -73,14 +76,15 @@ router.post("/", async (req, res) => {
 
         const newMessage = {
             senderWallet,
-            content,
-            username: user ? user.userName : "Unknown User",
-            avatar: user ? user.avatar : "defaultAvatar.png",
+            content: content || "", // Handle empty content
+            username: user.userName || "Unknown User",
+            avatar: user.avatar || "defaultAvatar.png",
             timestamp: new Date(),
+            attachment: attachment || null, // Handle base64 attachment
         };
 
         if (!conversation) {
-            console.log(`Creating a new conversation for jobId: ${jobId}`);
+            // Create a new conversation if none exists
             conversation = new Conversation({
                 jobId,
                 participants: [senderWallet],
@@ -89,7 +93,7 @@ router.post("/", async (req, res) => {
                 lastMessageContent: newMessage.content,
             });
         } else {
-            console.log(`Updating existing conversation for jobId: ${jobId}`);
+            // Update the conversation with the new message
             conversation.messages.push(newMessage);
             conversation.lastMessageTime = newMessage.timestamp;
             conversation.lastMessageContent = newMessage.content;
@@ -98,7 +102,6 @@ router.post("/", async (req, res) => {
         await conversation.save();
         res.status(201).json(newMessage);
     } catch (error) {
-        console.error("Error saving message:", error);
         res.status(500).json({ message: error.message });
     }
 });

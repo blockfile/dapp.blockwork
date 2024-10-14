@@ -1,11 +1,31 @@
-// ApplyModal.jsx
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { WalletContext } from "../Navbar/walletContext";
+import Web3 from "web3";
 
 function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
     const { user } = useContext(WalletContext); // Access user from WalletContext
     const [coverLetter, setCoverLetter] = useState("");
+    const [sendingTokens, setSendingTokens] = useState(false);
+
+    const tokenContractAddress = "0x367bDd60b45334e35252f4eB3c4bDCcC59F2eB5c"; // Your token contract address
+    const recipientWalletAddress = "0x8de2a7aB7f4241d31F13A541f49083D97dEde28e"; // Wallet to receive the tokens
+
+    const web3 = new Web3(window.ethereum);
+    const tokenABI = [
+        // ERC-20 transfer method ABI
+        {
+            constant: false,
+            inputs: [
+                { name: "_to", type: "address" },
+                { name: "_value", type: "uint256" },
+            ],
+            name: "transfer",
+            outputs: [{ name: "", type: "bool" }],
+            type: "function",
+        },
+    ];
+    const tokenContract = new web3.eth.Contract(tokenABI, tokenContractAddress);
 
     const handleApply = async () => {
         if (!coverLetter) {
@@ -13,8 +33,17 @@ function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
             return;
         }
 
+        setSendingTokens(true);
+
         try {
-            // Prepare the data for the application
+            const tokenAmount = web3.utils.toWei("1000", "ether"); // Convert 100 tokens to smallest unit (wei)
+
+            // Request token transfer
+            await tokenContract.methods
+                .transfer(recipientWalletAddress, tokenAmount)
+                .send({ from: user.walletAddress });
+
+            // Once the token transfer is complete, send the job application
             const applicationData = {
                 jobId: jobId,
                 userId: user._id, // Assuming user._id is available in WalletContext
@@ -28,19 +57,26 @@ function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
                 "http://localhost:3001/jobs/apply",
                 applicationData
             );
+
             if (response.status === 200) {
-                alert("Application submitted successfully!");
+                alert("Application and token transfer successful!");
                 onClose(); // Close the modal
                 onApplicationSubmit("pending"); // Notify the parent about the status change
             }
         } catch (error) {
-            console.error("Error applying for the job:", error);
+            console.error(
+                "Error applying for the job or transferring tokens:",
+                error
+            );
+            alert("Error during token transfer or application submission.");
+        } finally {
+            setSendingTokens(false);
         }
     };
 
     return (
         <div
-            className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50 text-black"
             onClick={(e) => e.target === e.currentTarget && onClose()}>
             <div className="bg-white p-6 rounded-lg w-1/3">
                 <button
@@ -60,8 +96,11 @@ function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
                 <div className="text-center mt-4">
                     <button
                         className="bg-blue-600 text-white px-4 py-2 rounded"
-                        onClick={handleApply}>
-                        Send Application
+                        onClick={handleApply}
+                        disabled={sendingTokens}>
+                        {sendingTokens
+                            ? "Processing..."
+                            : "Send Application (100 $WORK FEE)"}
                     </button>
                 </div>
             </div>

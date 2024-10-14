@@ -15,3 +15,11 @@
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
+.bg-color {
+    /* Base background color */
+    background-image: radial-gradient(
+        120% 80% at 50% 0%,
+        transparent 10%,
+        rgba(0, 59, 117, 0.3) 80%
+    ); /* Radial gradient background */
+}

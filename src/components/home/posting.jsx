@@ -5,7 +5,7 @@ import { WalletContext } from "../Navbar/walletContext"; // Import the WalletCon
 import Web3 from "web3"; // Import Web3
 import JobEscrowABI from "../home/JobEscrowABI.json";
 import USDT_ABI from "../home/USDT_ABI.json";
-
+import "./posting.css";
 function Posting() {
     const { user } = useContext(WalletContext); // Access the user from WalletContext
 
@@ -142,37 +142,37 @@ function Posting() {
             <Navbar />
 
             {/* Job posting form */}
-            <div className="flex justify-center items-center flex-grow mt-5 mb-5 ">
-                <div className="w-full max-w-lg p-6 border border-gray-200 rounded-xl shadow-lg">
+            <div className="flex justify-center items-center flex-grow mt-5 mb-5 font-bruno ">
+                <div className="w-full max-w-3xl mx-2 p-6   rounded-xl ">
                     <h1 className="text-2xl font-semibold text-center mb-6 ">
                         Job Posting
                     </h1>
 
                     <form onSubmit={handleSubmit}>
                         {/* Company Logo Upload */}
-                        <div className="mb-4 text-center">
+                        <div className="mb-4 text-center ">
                             <div className="mb-4 text-center">
                                 <label
                                     htmlFor="banner-upload"
-                                    className="block text-sm font-medium text-gray-700 mb-2 cursor-pointer">
+                                    className="block text-sm font-medium text-white  mb-2 cursor-pointer">
                                     Job Banner
                                 </label>
-                                <div className="relative group inline-block">
+                                <div className="relative group  ">
                                     <label
                                         htmlFor="banner-upload"
-                                        className="cursor-pointer">
+                                        className="cursor-pointer ">
                                         {bannerPreview ? (
                                             <img
                                                 src={bannerPreview}
                                                 alt="Banner Preview"
-                                                className="w-full h-32 object-cover rounded-lg mx-auto"
+                                                className="w-full h-36 object-cover  rounded-t-lg mx-auto"
                                             />
                                         ) : (
-                                            <div className="w-full h-32 bg-gray-300 rounded-lg flex justify-center items-center text-gray-500">
+                                            <div className="w-full h-36 bg-gray-300 rounded-t-lg flex justify-center items-center text-gray-500 ">
                                                 Upload Banner
                                             </div>
                                         )}
-                                        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 flex justify-center items-center rounded-lg">
+                                        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 flex justify-center items-center rounded-t-lg ">
                                             <span className="text-white opacity-0 group-hover:opacity-100">
                                                 Upload Banner
                                             </span>
@@ -189,7 +189,7 @@ function Posting() {
                             </div>
                             <label
                                 htmlFor="logo-upload"
-                                className="block text-sm font-medium text-gray-700 mb-2 cursor-pointer">
+                                className="block text-sm font-medium text-white mb-2 cursor-pointer">
                                 Company Logo
                             </label>
                             <div className="relative group inline-block">
@@ -225,12 +225,12 @@ function Posting() {
 
                         {/* Job Title */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Job Title
                             </label>
                             <input
                                 type="text"
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border hover:border-4 hover:rounded rounded text-black hover:border-blue-600"
                                 placeholder="Enter job title"
                                 value={jobTitle}
                                 onChange={(e) => setJobTitle(e.target.value)}
@@ -240,12 +240,12 @@ function Posting() {
 
                         {/* Budget */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Budget
+                            <label className="block text-sm font-medium text-white mb-2">
+                                Budget (USDT)
                             </label>
                             <input
                                 type="number"
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="Enter budget (e.g., 75)"
                                 value={budget}
                                 onChange={(e) => setBudget(e.target.value)}
@@ -255,11 +255,11 @@ function Posting() {
 
                         {/* Job Type */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Job Type
                             </label>
                             <select
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 value={jobType}
                                 disabled // Disable the dropdown
                             >
@@ -269,11 +269,11 @@ function Posting() {
 
                         {/* Experience Level */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Experience Level
                             </label>
                             <select
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 value={experienceLevel}
                                 onChange={(e) =>
                                     setExperienceLevel(e.target.value)
@@ -292,11 +292,11 @@ function Posting() {
 
                         {/* Responsibilities */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Responsibilities
                             </label>
                             <textarea
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="Enter responsibilities, each on a new line"
                                 value={responsibilities}
                                 onChange={(e) =>
@@ -308,11 +308,11 @@ function Posting() {
 
                         {/* Requirements */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Requirements
                             </label>
                             <textarea
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="Enter requirements, each on a new line"
                                 value={requirements}
                                 onChange={(e) =>
@@ -324,11 +324,11 @@ function Posting() {
 
                         {/* Description */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Description
                             </label>
                             <textarea
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="Describe the job..."
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
@@ -338,12 +338,12 @@ function Posting() {
 
                         {/* Tags */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Tags (comma separated)
                             </label>
                             <input
                                 type="text"
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="e.g., Docker, DevOps, Networking"
                                 value={tags}
                                 onChange={(e) => setTags(e.target.value)}

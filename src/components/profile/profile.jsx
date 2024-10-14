@@ -301,11 +301,16 @@ const Profile = () => {
     }, [user.avatar, walletConnected]);
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className=" min-h-screen">
             <div className="pb-5">
                 <Navbar />
             </div>
-            <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+            <div
+                className="max-w-4xl mx-auto bg-gray-900 shadow-md rounded-lg p-6"
+                style={{
+                    backgroundImage:
+                        "radial-gradient(120% 80% at 50% 0%, transparent 10%, rgba(0, 59, 117, 0.3) 80%)",
+                }}>
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center space-x-4">
                         {/* Avatar section */}
@@ -335,7 +340,7 @@ const Profile = () => {
                         </div>
                         <div>
                             <div className="flex items-center">
-                                <h1 className="text-2xl font-semibold text-gray-900">
+                                <h1 className="text-2xl font-semibold text-white">
                                     {displayedUser?.userName
                                         ? "@" + displayedUser.userName
                                         : "[Enter your name]"}
@@ -360,11 +365,6 @@ const Profile = () => {
                                         />
                                     )}
                             </div>
-                            <p className="text-gray-500">
-                                {displayedUser?.location ||
-                                    "[Enter your location]"}{" "}
-                                - [Local time]
-                            </p>
                         </div>
                     </div>
                     {walletAddress === user.walletAddress &&
@@ -460,7 +460,7 @@ const Profile = () => {
                         <div className="p-4 rounded-lg mb-4 relative ">
                             {/* Job Title and Skills */}
                             <div className="flex justify-center items-center mb-2 relative mt-2">
-                                <h2 className="text-xl font-semibold text-center text-gray-900">
+                                <h2 className="text-xl font-semibold text-center text-gray-300">
                                     {displayedUser?.jobTitle ||
                                         "[Enter your job title]"}{" "}
                                 </h2>

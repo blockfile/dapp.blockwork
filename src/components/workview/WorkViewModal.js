@@ -193,7 +193,7 @@ function WorkViewModal({ jobId, onClose, onAssign }) {
 
     return (
         <div
-            className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50 text-black"
             onClick={handleBackgroundClick}>
             <div className="relative bg-white p-6 rounded-lg w-11/12 md:w-1/3 max-h-96 overflow-y-auto">
                 <button

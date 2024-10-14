@@ -6,6 +6,7 @@ module.exports = {
             fontFamily: {
                 orbitron: ["Orbitron", "sans-serif"],
                 Outfit: ["Outfit", "sans-serif"],
+                bruno: ["'Bruno Ace SC'", "sans-serif"],
             },
         },
     },

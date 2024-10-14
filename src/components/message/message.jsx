@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdMessage } from "react-icons/md";
+import { FaFileUpload } from "react-icons/fa"; // File upload icon
 import { useParams, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import Navbar from "../Navbar/Navbar";
@@ -17,6 +18,7 @@ function Messages() {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [jobConversations, setJobConversations] = useState([]);
+    const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -78,6 +80,22 @@ function Messages() {
         }
     }, [senderWallet]);
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Limit file size to 5MB
+            if (file.size > 5 * 1024 * 1024) {
+                alert("File size exceeds 5MB");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedFile(reader.result); // Store base64 encoded file
+            };
+            reader.readAsDataURL(file); // Convert file to base64
+        }
+    };
+
     // Fetch messages for the selected job
     useEffect(() => {
         if (!jobId) {
@@ -118,7 +136,8 @@ function Messages() {
     }, [senderWallet, jobId]);
 
     const sendMessage = () => {
-        if (!message.trim() || !senderWallet || !jobId) return;
+        if (!message.trim() && !selectedFile) return;
+        if (!senderWallet || !jobId) return;
 
         // Initialize the newMessage object first
         const newMessage = {
@@ -128,10 +147,8 @@ function Messages() {
             username: user.userName,
             avatar: user.avatar,
             timestamp: new Date(),
+            attachment: selectedFile || null,
         };
-
-        // Now you can reference `newMessage.content` to set `lastMessageContent` or send the message
-        newMessage.lastMessageContent = newMessage.content;
 
         // Emit the new message via the socket
         socket.emit("sendMessage", newMessage);
@@ -141,6 +158,7 @@ function Messages() {
             .post("http://localhost:3001/messages", newMessage)
             .then(() => {
                 setMessage(""); // Clear the input field
+                setSelectedFile(null); // Clear file input
 
                 // Update job conversations
                 setJobConversations((prevConversations) =>
@@ -170,15 +188,14 @@ function Messages() {
         setMessages([]);
         navigate(`/messages/${job._id}`);
     };
+
     useEffect(() => {
         async function fetchJobConversations() {
             try {
-                // Ensure the URL is pointing to the correct port and route
                 const response = await axios.get(
                     "http://localhost:3001/messages/conversations"
                 );
-
-                setJobConversations(response.data); // Assuming you have a state for job conversations
+                setJobConversations(response.data);
             } catch (error) {
                 console.error("Error fetching conversations:", error);
             }
@@ -188,7 +205,7 @@ function Messages() {
     }, []); // Fetch conversations when the component mounts
 
     return (
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen overflow-hidden">
             <Navbar />
 
             <div className="flex flex-grow h-full">
@@ -197,11 +214,11 @@ function Messages() {
                         <h1 className="text-2xl font-semibold">Messages</h1>
                         <BsThreeDotsVertical className="text-2xl text-gray-500" />
                     </div>
-                    <div className="mt-6">
+                    <div className="mt-6 text-green-800">
                         {jobConversations.length > 0 ? (
                             jobConversations.map((job) => {
                                 const lastMessage =
-                                    job.lastMessageContent || "No messages yet"; // Use merged data
+                                    job.lastMessageContent || "No messages yet";
 
                                 return (
                                     <div
@@ -224,8 +241,7 @@ function Messages() {
                                                 {job.title}
                                             </h3>
                                             <p className="text-sm text-gray-500 text-justify">
-                                                {lastMessage}{" "}
-                                                {/* Display the last message content */}
+                                                {lastMessage}
                                             </p>
                                         </div>
                                     </div>
@@ -277,10 +293,34 @@ function Messages() {
                                                         msg.senderWallet ===
                                                         senderWallet
                                                             ? "bg-blue-500 text-white"
-                                                            : "bg-gray-200"
+                                                            : "bg-gray-600"
                                                     }`}>
                                                     {msg.content}
                                                 </p>
+                                                {msg.attachment && (
+                                                    <div>
+                                                        {msg.attachment.startsWith(
+                                                            "data:image"
+                                                        ) ? (
+                                                            <img
+                                                                src={
+                                                                    msg.attachment
+                                                                }
+                                                                alt="Attachment"
+                                                                className="w-64 h-auto"
+                                                            />
+                                                        ) : (
+                                                            <a
+                                                                href={
+                                                                    msg.attachment
+                                                                }
+                                                                download>
+                                                                Download
+                                                                Attachment
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))
@@ -301,14 +341,31 @@ function Messages() {
                     </div>
 
                     {jobId && (
-                        <div className="p-4 flex border-t border-gray-300 bg-white">
+                        <div className="p-4 flex border-t border-gray-300 bg-color text-white">
                             <input
                                 type="text"
-                                className="flex-1 p-2 border rounded-lg"
+                                className="flex-1 p-2 border rounded-lg bg-color bg-black"
                                 placeholder="Type a message..."
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        sendMessage();
+                                    }
+                                }}
                             />
+                            <label className="cursor-pointer">
+                                <FaFileUpload
+                                    className="text-2xl ml-2  "
+                                    size={45}
+                                />
+                                <input
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    accept="image/*,video/*,.doc,.docx,.pdf,.txt"
+                                    className="hidden"
+                                />
+                            </label>
                             <button
                                 className="bg-blue-600 text-white px-4 py-2 rounded ml-2"
                                 onClick={sendMessage}>

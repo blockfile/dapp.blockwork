@@ -1,0 +1,104 @@
+.modal-shape {
+    clip-path: polygon(
+        0px calc(100% - 22px),
+        0px 0,
+        100% 0,
+        100% calc(100% - 22px),
+        calc(100% - 22px) 100%,
+        22px 100%
+    );
+    position: relative; /* Keep this relative so we can use z-index */
+}
+
+.navbar-dropdown {
+    position: absolute; /* Ensure it's absolutely positioned */
+    z-index: 50; /* Place it above the clipped background */
+    top: 100%; /* Dropdown opens below the avatar */
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+}
+
+.bg-color {
+    /* Base background color */
+    background-image: radial-gradient(
+        120% 80% at 50% 0%,
+        transparent 10%,
+        rgba(0, 59, 117, 0.3) 80%
+    ); /* Radial gradient background */
+}
+.dropdown-menu {
+    z-index: 50; /* Ensure the dropdown stays on top */
+}
+/* Navbar.css */
+.navbar {
+    position: relative;
+    z-index: 10; /* Ensure the navbar is higher than other content */
+}
+
+.dropdown {
+    z-index: 50; /* Make sure the dropdown is displayed above other content */
+}
+/* Add smooth transitions for hover effects */
+nav .hover\:bg-transparent:hover {
+    transition: background-color 0.5s ease-in-out; /* Slow transition on background hover */
+}
+
+nav a {
+    transition: color 0.3s ease-in-out; /* Slow transition for link text color */
+}
+
+nav a:hover {
+    color: #00ff00; /* Change the hover color */
+}
+
+button {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Smooth transition for buttons */
+}
+
+button:hover {
+    background-color: #0056b3; /* Change background color on hover */
+    color: white; /* Change text color */
+}
+
+/* Add transitions for mobile icons */
+.icon-transition {
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Transition effect for dropdown */
+.dropdown-content {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.dropdown-content.show {
+    opacity: 1;
+}
+
+.dropdown-content.hide {
+    opacity: 0;
+}
+/* Apply transition to mobile icons */
+.icon-transition {
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.icon-transition:hover {
+    transform: scale(1.2); /* Enlarge icon slightly on hover */
+    color: #00ff00; /* Change icon color on hover */
+}
+
+/* Apply fade-in and fade-out effect to links */
+.link-transition {
+    transition: opacity 0.4s ease-in-out, color 0.4s ease-in-out;
+}
+
+.link-transition:hover {
+    opacity: 0.8; /* Fade effect */
+    color: #00ff00; /* Change text color */
+}
+.bg-dropdown {
+    background: rgb(65, 91, 57);
+}

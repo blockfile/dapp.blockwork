@@ -6,12 +6,23 @@ const Conversation = require("../model/messageSchema");
 // Get all jobs
 router.get("/", async (req, res) => {
     try {
-        const jobs = await Job.find(); // Fetch all jobs
-        res.json(jobs);
+        const page = parseInt(req.query.page) || 1; // Get the current page from query params, default to 1
+        const limit = parseInt(req.query.limit) || 10; // Get the limit (jobs per page) from query params, default to 10
+        const skip = (page - 1) * limit; // Calculate the number of jobs to skip for pagination
+
+        const total = await Job.estimatedDocumentCount();
+        // Get the total number of jobs in the collection
+        const jobs = await Job.find().skip(skip).limit(limit); // Fetch jobs for the current page
+
+        res.json({
+            total, // Total number of jobs
+            jobs, // The jobs for the current page
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
+
 router.get("/my-posts/:walletAddress", async (req, res) => {
     try {
         const jobs = await Job.find({
