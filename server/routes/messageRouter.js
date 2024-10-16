@@ -34,7 +34,10 @@ router.get("/job/:jobId", async (req, res) => {
     console.log("Fetching messages for jobId: ", jobId);
 
     try {
-        const conversation = await Conversation.findOne({ jobId });
+        let conversation = await Conversation.findOne({
+            jobId,
+            participants: { $all: [senderWallet, recipientWallet] }, // Check if both participants are in the conversation
+        });
 
         if (!conversation) {
             console.log("No conversation found for this job:", jobId);
