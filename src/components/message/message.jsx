@@ -42,7 +42,7 @@ function Messages() {
 
                 // Fetch conversation data separately
                 const conversationsResponse = await axios.get(
-                    "https://dapp.blockworkprotocol.xyz/api/messages/conversations"
+                    "http://localhost:3001/messages/conversations"
                 );
                 const conversations = conversationsResponse.data;
 
@@ -108,30 +108,12 @@ function Messages() {
                 const response = await axios.get(
                     `https://dapp.blockworkprotocol.xyz/api/messages/job/${jobId}`
                 );
-                console.log("Messages fetched successfully:", response.data);
-
-                // Sort the messages based on timestamp
                 const sortedMessages = response.data.sort(
                     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
                 );
                 setMessages(sortedMessages);
             } catch (error) {
-                console.error(
-                    "Error fetching messages:",
-                    error.response?.data || error.message
-                );
-                // Add more details on the error if needed
-                if (error.response?.status === 500) {
-                    alert(
-                        "Server error while fetching messages. Please try again later."
-                    );
-                } else if (error.response?.status === 404) {
-                    alert("No conversation found for this job.");
-                } else {
-                    alert(
-                        "Error fetching messages. Check your network and try again."
-                    );
-                }
+                console.error("Error fetching messages:", error);
             }
         };
 
@@ -153,33 +135,11 @@ function Messages() {
         };
     }, [senderWallet, jobId]);
 
-    const sendMessage = async () => {
+    const sendMessage = () => {
         if (!message.trim() && !selectedFile) return;
         if (!senderWallet || !jobId) return;
 
-        let attachmentUrl = null;
-
-        if (selectedFile) {
-            const formData = new FormData();
-            formData.append("file", selectedFile);
-
-            try {
-                const fileResponse = await axios.post(
-                    "https://dapp.blockworkprotocol.xyz/api/messages/upload",
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    }
-                );
-                attachmentUrl = fileResponse.data.file.filename;
-            } catch (error) {
-                console.error("Error uploading file:", error);
-                return;
-            }
-        }
-
+        // Initialize the newMessage object first
         const newMessage = {
             senderWallet,
             jobId,
@@ -187,25 +147,41 @@ function Messages() {
             username: user.userName,
             avatar: user.avatar,
             timestamp: new Date(),
-            attachment: attachmentUrl
-                ? `/api/messages/file/${attachmentUrl}`
-                : null,
+            attachment: selectedFile || null,
         };
 
         // Emit the new message via the socket
         socket.emit("sendMessage", newMessage);
 
         // Send the new message to the backend
-        try {
-            await axios.post(
-                "https://dapp.blockworkprotocol.xyz/api/messages",
-                newMessage
-            );
-            setMessage(""); // Clear the input field
-            setSelectedFile(null); // Clear file input
-        } catch (error) {
-            console.error("Error sending message:", error);
-        }
+        axios
+            .post("https://dapp.blockworkprotocol.xyz/api/messages", newMessage)
+            .then(() => {
+                setMessage(""); // Clear the input field
+                setSelectedFile(null); // Clear file input
+
+                // Update job conversations
+                setJobConversations((prevConversations) =>
+                    prevConversations
+                        .map((conversation) =>
+                            conversation.jobId === jobId
+                                ? {
+                                      ...conversation,
+                                      lastMessageTime: newMessage.timestamp,
+                                      lastMessageContent: newMessage.content,
+                                  }
+                                : conversation
+                        )
+                        .sort(
+                            (a, b) =>
+                                new Date(b.lastMessageTime) -
+                                new Date(a.lastMessageTime)
+                        )
+                );
+            })
+            .catch((error) => {
+                console.error("Error sending message:", error);
+            });
     };
 
     const handleJobSelection = (job) => {
