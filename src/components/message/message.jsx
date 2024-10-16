@@ -108,12 +108,30 @@ function Messages() {
                 const response = await axios.get(
                     `https://dapp.blockworkprotocol.xyz/api/messages/job/${jobId}`
                 );
+                console.log("Messages fetched successfully:", response.data);
+
+                // Sort the messages based on timestamp
                 const sortedMessages = response.data.sort(
                     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
                 );
                 setMessages(sortedMessages);
             } catch (error) {
-                console.error("Error fetching messages:", error);
+                console.error(
+                    "Error fetching messages:",
+                    error.response?.data || error.message
+                );
+                // Add more details on the error if needed
+                if (error.response?.status === 500) {
+                    alert(
+                        "Server error while fetching messages. Please try again later."
+                    );
+                } else if (error.response?.status === 404) {
+                    alert("No conversation found for this job.");
+                } else {
+                    alert(
+                        "Error fetching messages. Check your network and try again."
+                    );
+                }
             }
         };
 

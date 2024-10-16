@@ -31,24 +31,24 @@ const upload = multer({ storage });
 // Get all messages based on jobId
 router.get("/job/:jobId", async (req, res) => {
     const { jobId } = req.params;
+    console.log("Fetching messages for jobId: ", jobId);
 
     try {
         const conversation = await Conversation.findOne({ jobId });
 
         if (!conversation) {
+            console.log("No conversation found for this job:", jobId);
             return res
                 .status(404)
                 .json({ message: "No conversation found for this job." });
         }
 
-        // Sort messages by timestamp in ascending order
         const populatedMessages = await Promise.all(
             conversation.messages
                 .map(async (message) => {
                     const user = await User.findOne({
                         walletAddress: message.senderWallet,
                     });
-
                     return {
                         ...message.toObject(),
                         username: user ? user.userName : "Unknown User",
@@ -60,7 +60,8 @@ router.get("/job/:jobId", async (req, res) => {
 
         res.status(200).json(populatedMessages);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
