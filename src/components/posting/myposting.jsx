@@ -14,7 +14,7 @@ function MyPosting() {
         try {
             // Fetch jobs using the new route with user's wallet address
             const response = await axios.get(
-                `http://localhost:3001/jobs/my-posts/${user.walletAddress}`
+                `https://dapp.blockworkprotocol.xyz/api/jobs/my-posts/${user.walletAddress}`
             );
             setJobs(response.data); // Set the fetched jobs to state
             setLoading(false); // Stop loading

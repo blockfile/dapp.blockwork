@@ -27,7 +27,7 @@ const Profile = () => {
         const fetchUserProfile = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3001/usersJobs/${walletAddress}`
+                    `https://dapp.blockworkprotocol.xyz/api/usersJobs/${walletAddress}`
                 );
                 setUserProfile(response.data);
             } catch (error) {
@@ -49,7 +49,7 @@ const Profile = () => {
             ) {
                 try {
                     const response = await axios.get(
-                        `http://localhost:3001/usersJobs/${user.walletAddress}`
+                        `https://dapp.blockworkprotocol.xyz/api/usersJobs/${user.walletAddress}`
                     );
                     updateUserProfile(response.data); // Update the user profile in the WalletContext
                     setUserFetched(true); // Ensure it doesn't fetch again
@@ -76,7 +76,7 @@ const Profile = () => {
     const handleDeleteWorkHistory = async (workHistoryId) => {
         try {
             const response = await axios.post(
-                "http://localhost:3001/usersJobs/delete-work-history",
+                "https://dapp.blockworkprotocol.xyz/api/usersJobs/delete-work-history",
                 { walletAddress: user.walletAddress, workHistoryId }
             );
             if (response.data) {
@@ -101,7 +101,7 @@ const Profile = () => {
                 try {
                     // Axios request to upload base64 avatar
                     const response = await axios.post(
-                        "http://localhost:3001/usersJobs/upload-avatar",
+                        "https://dapp.blockworkprotocol.xyz/api/usersJobs/upload-avatar",
                         {
                             walletAddress: user.walletAddress,
                             avatarData: base64String,
@@ -128,7 +128,7 @@ const Profile = () => {
     const handleDeletePortfolioItem = async (portfolioId) => {
         try {
             const response = await axios.post(
-                "http://localhost:3001/usersJobs/delete-portfolio",
+                "https://dapp.blockworkprotocol.xyz/api/usersJobs/delete-portfolio",
                 {
                     walletAddress: user.walletAddress,
                     portfolioId,
@@ -166,7 +166,7 @@ const Profile = () => {
 
                 // Making the POST request to update the user's name
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-name",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-name",
                     {
                         walletAddress: user.walletAddress,
                         userName: updatedData.userName.trim(), // Trim whitespaces to avoid empty inputs
@@ -174,7 +174,7 @@ const Profile = () => {
                 );
             } else if (modalType === "language") {
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-language",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-language",
                     {
                         walletAddress: user.walletAddress,
                         language: updatedData.language,
@@ -183,7 +183,7 @@ const Profile = () => {
                 );
             } else if (modalType === "education") {
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-education",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-education",
                     {
                         walletAddress: user.walletAddress,
                         school: updatedData.school,
@@ -192,7 +192,7 @@ const Profile = () => {
                 );
             } else if (modalType === "jobTitle") {
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-job",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-job",
                     {
                         walletAddress: user.walletAddress,
                         jobTitle: updatedData.jobTitle,
@@ -200,7 +200,7 @@ const Profile = () => {
                 );
             } else if (modalType === "jobDescription") {
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-job-description",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-job-description",
                     {
                         walletAddress: user.walletAddress,
                         jobDescription: updatedData.jobDescription,
@@ -208,7 +208,7 @@ const Profile = () => {
                 );
             } else if (modalType === "hourlyRate") {
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-rate",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-rate",
                     {
                         walletAddress: user.walletAddress,
                         hourlyRate: updatedData.hourlyRate,
@@ -223,7 +223,7 @@ const Profile = () => {
                         workItem.startDate
                     ) {
                         response = await axios.post(
-                            "http://localhost:3001/usersJobs/update-work-history",
+                            "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-work-history",
                             {
                                 walletAddress: user.walletAddress,
                                 jobTitle: workItem.jobTitle,
@@ -243,7 +243,7 @@ const Profile = () => {
             } else if (modalType === "portfolio") {
                 // Handle portfolio update
                 response = await axios.post(
-                    "http://localhost:3001/usersJobs/update-portfolio",
+                    "https://dapp.blockworkprotocol.xyz/api/usersJobs/update-portfolio",
                     {
                         walletAddress: user.walletAddress,
                         title: updatedData.title,

@@ -23,7 +23,7 @@ function Home() {
         const fetchJobs = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3001/jobs?page=${currentPage}&limit=${jobsPerPage}`
+                    `https://dapp.blockworkprotocol.xyz/api/jobs?page=${currentPage}&limit=${jobsPerPage}`
                 );
                 setJobs(response.data.jobs); // Paginated job data
                 setTotalJobs(response.data.total); // Total number of jobs

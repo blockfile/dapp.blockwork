@@ -23,8 +23,8 @@ function Posting() {
     const [requirements, setRequirements] = useState("");
     const [banner, setBanner] = useState(null); // New state for banner
     const [bannerPreview, setBannerPreview] = useState(null);
-    const escrowContractAddress = "0x2dfe9af3a53d02f94b8ef918577b743322a679df"; // Your escrow contract address
-    const usdtContractAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd"; // Your USDT contract address
+    const escrowContractAddress = "0x925460efc323361be0d3b215d98284bd96aa99e4"; // Your escrow contract address
+    const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955"; // Your USDT contract address
     const web3 = new Web3(window.ethereum);
     const escrowContract = new web3.eth.Contract(
         JobEscrowABI,
@@ -121,7 +121,7 @@ function Posting() {
 
                         // Step 4: Save job data in your backend
                         const response = await axios.post(
-                            "http://localhost:3001/jobs",
+                            "https://dapp.blockworkprotocol.xyz/api/jobs",
                             jobData
                         );
                         console.log("Job created:", response.data);

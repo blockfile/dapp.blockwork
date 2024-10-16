@@ -20,7 +20,7 @@ export const WalletProvider = ({ children }) => {
     // Fetch the token balance
     const fetchTokenBalance = async (walletAddress) => {
         const apiKey = "JUDPV627WC6YPRF9PJ992PQ4MMAIZVCDVV"; // Replace with your BscScan API key
-        const contractAddress = "0x367bDd60b45334e35252f4eB3c4bDCcC59F2eB5c"; // Your token's contract address
+        const contractAddress = "0x2572bb0177dF04D8Bf69D1313C42D002c3dfF055"; // Your token's contract address
         const url = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${contractAddress}&address=${walletAddress}&tag=latest&apikey=${apiKey}`;
 
         try {
@@ -83,17 +83,17 @@ export const WalletProvider = ({ children }) => {
     const connectWallet = async () => {
         if (window.ethereum) {
             try {
-                // Check if the current network is the correct testnet
+                // Check if the current network is the correct mainnet
                 const chainId = await window.ethereum.request({
                     method: "eth_chainId",
                 });
 
-                // Replace with the chainId of your desired testnet (e.g., BSC Testnet: '0x61')
-                const desiredChainId = "0x61"; // BSC Testnet in hexadecimal (use '0x38' for BSC Mainnet)
+                // BSC Mainnet Chain ID is '0x38'
+                const desiredChainId = "0x38"; // BSC Mainnet
 
                 if (chainId !== desiredChainId) {
                     try {
-                        // Request network change
+                        // Request network change to BSC Mainnet
                         await window.ethereum.request({
                             method: "wallet_switchEthereumChain",
                             params: [{ chainId: desiredChainId }],
@@ -108,17 +108,17 @@ export const WalletProvider = ({ children }) => {
                                         {
                                             chainId: desiredChainId,
                                             chainName:
-                                                "Binance Smart Chain Testnet",
+                                                "Binance Smart Chain Mainnet",
                                             nativeCurrency: {
                                                 name: "BNB",
                                                 symbol: "BNB",
                                                 decimals: 18,
                                             },
                                             rpcUrls: [
-                                                "https://data-seed-prebsc-1-s1.binance.org:8545/",
+                                                "https://bsc-dataseed.binance.org/",
                                             ],
                                             blockExplorerUrls: [
-                                                "https://testnet.bscscan.com",
+                                                "https://bscscan.com",
                                             ],
                                         },
                                     ],
@@ -160,7 +160,7 @@ export const WalletProvider = ({ children }) => {
                     // Check if the user exists in the database, if not, create the user
                     try {
                         const response = await axios.post(
-                            "http://localhost:3001/usersJobs/create-or-get-user",
+                            "https://dapp.blockworkprotocol.xyz/api/usersJobs/create-or-get-user",
                             { walletAddress: account }
                         );
                         const userData = response.data;

@@ -19,7 +19,7 @@ function WorkViewModal({ jobId, onClose, onAssign }) {
     });
     const { user } = useContext(WalletContext);
     const web3 = new Web3(window.ethereum); // Create a Web3 instance
-    const escrowContractAddress = "0x2dfe9af3a53d02f94b8ef918577b743322a679df"; // Replace with your deployed escrow contract address
+    const escrowContractAddress = "0x925460efc323361be0d3b215d98284bd96aa99e4"; // Replace with your deployed escrow contract address
     const escrowContract = new web3.eth.Contract(
         JobEscrowABI,
         escrowContractAddress
@@ -30,7 +30,7 @@ function WorkViewModal({ jobId, onClose, onAssign }) {
             try {
                 // Fetch job details from your backend
                 const response = await axios.get(
-                    `http://localhost:3001/jobs/${jobId}`
+                    `https://dapp.blockworkprotocol.xyz/api/jobs/${jobId}`
                 );
                 if (response.data) {
                     const jobDetails = response.data;
@@ -60,7 +60,7 @@ function WorkViewModal({ jobId, onClose, onAssign }) {
         try {
             // Fetch job details from your backend API
             const jobResponse = await axios.get(
-                `http://localhost:3001/jobs/${jobId}`
+                `https://dapp.blockworkprotocol.xyz/api/jobs/${jobId}`
             );
             const job = jobResponse.data;
 
@@ -104,10 +104,13 @@ function WorkViewModal({ jobId, onClose, onAssign }) {
                 .send({ from: user.walletAddress });
 
             // Update MongoDB to reflect the approved applicant's wallet address
-            await axios.put(`http://localhost:3001/jobs/approve/${jobId}`, {
-                userId: applicationId,
-                approvedApplicantWallet: applicantWalletAddress, // Add this line to update the field
-            });
+            await axios.put(
+                `https://dapp.blockworkprotocol.xyz/api/jobs/approve/${jobId}`,
+                {
+                    userId: applicationId,
+                    approvedApplicantWallet: applicantWalletAddress, // Add this line to update the field
+                }
+            );
 
             setApplications((prevApplications) =>
                 prevApplications.map((app) =>
@@ -127,9 +130,12 @@ function WorkViewModal({ jobId, onClose, onAssign }) {
 
     const handleDecline = async (applicationId) => {
         try {
-            await axios.put(`http://localhost:3001/jobs/decline/${jobId}`, {
-                userId: applicationId,
-            });
+            await axios.put(
+                `https://dapp.blockworkprotocol.xyz/api/jobs/decline/${jobId}`,
+                {
+                    userId: applicationId,
+                }
+            );
 
             setApplications((prevApplications) =>
                 prevApplications.filter(

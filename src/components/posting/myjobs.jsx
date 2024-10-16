@@ -13,7 +13,7 @@ function MyAppliedJobs() {
     const fetchAppliedJobs = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:3001/jobs/applied/${user.walletAddress}`
+                `https://dapp.blockworkprotocol.xyz/api/jobs/applied/${user.walletAddress}`
             );
             setAppliedJobs(response.data); // Set the fetched jobs to state
             setLoading(false); // Stop loading

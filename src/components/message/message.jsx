@@ -9,7 +9,7 @@ import axios from "axios";
 import { WalletContext } from "../Navbar/walletContext";
 import "./message.css";
 
-const socket = io("http://localhost:3001");
+const socket = io("https://dapp.blockworkprotocol.xyz");
 
 function Messages() {
     const { jobId } = useParams();
@@ -28,10 +28,10 @@ function Messages() {
                 const [postedJobsResponse, appliedJobsResponse] =
                     await Promise.all([
                         axios.get(
-                            `http://localhost:3001/jobs/my-posts/${senderWallet}`
+                            `https://dapp.blockworkprotocol.xyz/api/jobs/my-posts/${senderWallet}`
                         ),
                         axios.get(
-                            `http://localhost:3001/jobs/applied/${senderWallet}`
+                            `https://dapp.blockworkprotocol.xyz/api/jobs/applied/${senderWallet}`
                         ),
                     ]);
 
@@ -42,7 +42,7 @@ function Messages() {
 
                 // Fetch conversation data separately
                 const conversationsResponse = await axios.get(
-                    "http://localhost:3001/messages/conversations"
+                    "https://dapp.blockworkprotocol.xyz/api/messages/conversations"
                 );
                 const conversations = conversationsResponse.data;
 
@@ -106,7 +106,7 @@ function Messages() {
         const fetchMessages = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3001/messages/job/${jobId}`
+                    `https://dapp.blockworkprotocol.xyz/api/messages/job/${jobId}`
                 );
                 const sortedMessages = response.data.sort(
                     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
@@ -155,7 +155,7 @@ function Messages() {
 
         // Send the new message to the backend
         axios
-            .post("http://localhost:3001/messages", newMessage)
+            .post("https://dapp.blockworkprotocol.xyz/api/messages", newMessage)
             .then(() => {
                 setMessage(""); // Clear the input field
                 setSelectedFile(null); // Clear file input
@@ -193,7 +193,7 @@ function Messages() {
         async function fetchJobConversations() {
             try {
                 const response = await axios.get(
-                    "http://localhost:3001/messages/conversations"
+                    "https://dapp.blockworkprotocol.xyz/api/messages/conversations"
                 );
                 setJobConversations(response.data);
             } catch (error) {

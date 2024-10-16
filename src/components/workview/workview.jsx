@@ -20,7 +20,7 @@ function WorkView() {
     const web3 = new Web3(window.ethereum);
     const navigate = useNavigate();
 
-    const escrowContractAddress = "0x2dfe9af3a53d02f94b8ef918577b743322a679df";
+    const escrowContractAddress = "0x925460efc323361be0d3b215d98284bd96aa99e4";
     const escrowContract = new web3.eth.Contract(
         JobEscrowABI,
         escrowContractAddress
@@ -31,7 +31,7 @@ function WorkView() {
         const fetchJobDetails = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3001/jobs/${jobId}`
+                    `https://dapp.blockworkprotocol.xyz/api/jobs/${jobId}`
                 );
                 console.log(response.data); // Log the full job data to verify
 
@@ -119,7 +119,7 @@ function WorkView() {
 
             // Update the backend to mark this job as completed
             const updateResponse = await axios.put(
-                `http://localhost:3001/jobs/complete/${job.smartContractJobId}`
+                `https://dapp.blockworkprotocol.xyz/api/jobs/complete/${job.smartContractJobId}`
             );
 
             // Check if the update was successful
@@ -178,7 +178,7 @@ function WorkView() {
 
             // After successfully interacting with the smart contract, update the backend
             const response = await axios.put(
-                `http://localhost:3001/jobs/reassign/${job._id}`,
+                `https://dapp.blockworkprotocol.xyz/api/jobs/reassign/${job._id}`,
                 { newApplicantWallet, userId: user._id }
             );
 
@@ -219,7 +219,7 @@ function WorkView() {
 
             // Update the backend to reflect the refund status
             const updateResponse = await axios.put(
-                `http://localhost:3001/jobs/refund/${job.smartContractJobId}`
+                `https://dapp.blockworkprotocol.xyz/api/jobs/refund/${job.smartContractJobId}`
             );
 
             if (updateResponse.status === 200) {

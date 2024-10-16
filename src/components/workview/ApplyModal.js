@@ -54,7 +54,7 @@ function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
 
             // Send the application data to the backend
             const response = await axios.post(
-                "http://localhost:3001/jobs/apply",
+                "https://dapp.blockworkprotocol.xyz/api/jobs/apply",
                 applicationData
             );
 
