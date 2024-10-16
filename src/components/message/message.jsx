@@ -42,7 +42,7 @@ function Messages() {
 
                 // Fetch conversation data separately
                 const conversationsResponse = await axios.get(
-                    "http://localhost:3001/messages/conversations"
+                    "https://dapp.blockworkprotocol.xyz/api/messages/conversations"
                 );
                 const conversations = conversationsResponse.data;
 
@@ -135,11 +135,33 @@ function Messages() {
         };
     }, [senderWallet, jobId]);
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         if (!message.trim() && !selectedFile) return;
         if (!senderWallet || !jobId) return;
 
-        // Initialize the newMessage object first
+        let attachmentUrl = null;
+
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            try {
+                const fileResponse = await axios.post(
+                    "https://dapp.blockworkprotocol.xyz/api/messages/upload",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                attachmentUrl = fileResponse.data.file.filename;
+            } catch (error) {
+                console.error("Error uploading file:", error);
+                return;
+            }
+        }
+
         const newMessage = {
             senderWallet,
             jobId,
@@ -147,41 +169,25 @@ function Messages() {
             username: user.userName,
             avatar: user.avatar,
             timestamp: new Date(),
-            attachment: selectedFile || null,
+            attachment: attachmentUrl
+                ? `/api/messages/file/${attachmentUrl}`
+                : null,
         };
 
         // Emit the new message via the socket
         socket.emit("sendMessage", newMessage);
 
         // Send the new message to the backend
-        axios
-            .post("https://dapp.blockworkprotocol.xyz/api/messages", newMessage)
-            .then(() => {
-                setMessage(""); // Clear the input field
-                setSelectedFile(null); // Clear file input
-
-                // Update job conversations
-                setJobConversations((prevConversations) =>
-                    prevConversations
-                        .map((conversation) =>
-                            conversation.jobId === jobId
-                                ? {
-                                      ...conversation,
-                                      lastMessageTime: newMessage.timestamp,
-                                      lastMessageContent: newMessage.content,
-                                  }
-                                : conversation
-                        )
-                        .sort(
-                            (a, b) =>
-                                new Date(b.lastMessageTime) -
-                                new Date(a.lastMessageTime)
-                        )
-                );
-            })
-            .catch((error) => {
-                console.error("Error sending message:", error);
-            });
+        try {
+            await axios.post(
+                "https://dapp.blockworkprotocol.xyz/api/messages",
+                newMessage
+            );
+            setMessage(""); // Clear the input field
+            setSelectedFile(null); // Clear file input
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
 
     const handleJobSelection = (job) => {
