@@ -57,27 +57,36 @@ router.get("/conversations", async (req, res) => {
 
 // Save a new message or update conversation based on jobId
 router.post("/", async (req, res) => {
-    const { senderWallet, jobId, content } = req.body;
+    const { senderWallet, jobId, content, attachment } = req.body;
 
-    if (!senderWallet || !jobId || !content) {
-        return res.status(400).json({ message: "All fields are required." });
+    // Ensure either content or attachment is provided
+    if (!senderWallet || !jobId || (!content && !attachment)) {
+        console.error("Missing fields:", {
+            senderWallet,
+            jobId,
+            content,
+            attachment,
+        });
+        return res
+            .status(400)
+            .json({ message: "Either content or attachment is required." });
     }
 
     try {
         const user = await User.findOne({ walletAddress: senderWallet });
         if (!user) {
+            console.error("User not found:", senderWallet);
             return res.status(404).json({ message: "User not found." });
         }
 
         let conversation = await Conversation.findOne({ jobId });
-
         const newMessage = {
             senderWallet,
-            content,
-            username: user ? user.userName : "Unknown User",
-            avatar: user ? user.avatar : "defaultAvatar.png",
+            content: content || "", // Handle empty content
+            username: user.userName || "Unknown User",
+            avatar: user.avatar || "defaultAvatar.png",
             timestamp: new Date(),
-            attachment: attachment || null,
+            attachment: attachment || null, // Handle base64 attachment
         };
 
         if (!conversation) {
@@ -99,7 +108,7 @@ router.post("/", async (req, res) => {
         await conversation.save();
         res.status(201).json(newMessage);
     } catch (error) {
-        console.error("Error saving message:", error);
+        console.error("Error saving message:", error); // Add more detailed logging here
         res.status(500).json({ message: error.message });
     }
 });
