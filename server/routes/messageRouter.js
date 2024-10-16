@@ -1,8 +1,33 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const GridFsStorage = require("multer-gridfs-storage");
+const Grid = require("gridfs-stream");
+const multer = require("multer");
 const Conversation = require("../model/messageSchema");
 const User = require("../model/userSchema");
-// Get all messages based on jobId
+
+// Initialize GridFS
+const conn = mongoose.connection;
+let gfs;
+conn.once("open", () => {
+    gfs = Grid(conn.db, mongoose.mongo);
+    gfs.collection("uploads");
+});
+
+// GridFS storage configuration for Multer
+const storage = new GridFsStorage({
+    url: process.env.DATABASE_ACCESS,
+    file: (req, file) => {
+        return {
+            filename: `file_${Date.now()}_${file.originalname}`,
+            bucketName: "uploads", // Bucket to store large files
+        };
+    },
+});
+
+const upload = multer({ storage });
+
 // Get all messages based on jobId
 router.get("/job/:jobId", async (req, res) => {
     const { jobId } = req.params;
@@ -38,8 +63,8 @@ router.get("/job/:jobId", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-// Get all conversations for jobs
 
+// Get all conversations for jobs
 router.get("/conversations", async (req, res) => {
     try {
         const conversations = await Conversation.find(
@@ -55,12 +80,12 @@ router.get("/conversations", async (req, res) => {
     }
 });
 
-// Save a new message or update conversation based on jobId
-router.post("/", async (req, res) => {
-    const { senderWallet, jobId, content, attachment } = req.body;
+// Save a new message or update conversation based on jobId, with file handling
+router.post("/", upload.single("file"), async (req, res) => {
+    const { senderWallet, jobId, content } = req.body;
 
     // Ensure either content or attachment is provided
-    if (!senderWallet || !jobId || (!content && !attachment)) {
+    if (!senderWallet || !jobId || (!content && !req.file)) {
         return res
             .status(400)
             .json({ message: "Either content or attachment is required." });
@@ -80,7 +105,9 @@ router.post("/", async (req, res) => {
             username: user.userName || "Unknown User",
             avatar: user.avatar || "defaultAvatar.png",
             timestamp: new Date(),
-            attachment: attachment || null, // Handle base64 attachment
+            attachment: req.file
+                ? `/api/messages/file/${req.file.filename}`
+                : null, // Store the file URL
         };
 
         if (!conversation) {
@@ -104,6 +131,30 @@ router.post("/", async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+});
+
+// Endpoint to retrieve a file from GridFS by filename
+router.get("/file/:filename", (req, res) => {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+        if (!file || file.length === 0) {
+            return res.status(404).json({ message: "File not found" });
+        }
+
+        // If the file is found, check if it's an image or not
+        if (
+            file.contentType === "image/jpeg" ||
+            file.contentType === "image/png"
+        ) {
+            // If it's an image, stream it
+            const readstream = gfs.createReadStream(file.filename);
+            readstream.pipe(res);
+        } else {
+            // If it's another type of file, provide it for download
+            res.set("Content-Type", file.contentType);
+            const readstream = gfs.createReadStream(file.filename);
+            readstream.pipe(res);
+        }
+    });
 });
 
 module.exports = router;
