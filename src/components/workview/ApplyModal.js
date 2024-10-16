@@ -8,7 +8,7 @@ function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
     const [coverLetter, setCoverLetter] = useState("");
     const [sendingTokens, setSendingTokens] = useState(false);
 
-    const tokenContractAddress = "0x367bDd60b45334e35252f4eB3c4bDCcC59F2eB5c"; // Your token contract address
+    const tokenContractAddress = "0x2572bb0177dF04D8Bf69D1313C42D002c3dfF055"; // Your token contract address
     const recipientWalletAddress = "0x8de2a7aB7f4241d31F13A541f49083D97dEde28e"; // Wallet to receive the tokens
 
     const web3 = new Web3(window.ethereum);
@@ -100,7 +100,7 @@ function ApplyModal({ jobId, onClose, onApplicationSubmit }) {
                         disabled={sendingTokens}>
                         {sendingTokens
                             ? "Processing..."
-                            : "Send Application (100 $WORK FEE)"}
+                            : "Send Application (1000 $WORK FEE)"}
                     </button>
                 </div>
             </div>
