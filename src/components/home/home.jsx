@@ -79,9 +79,11 @@ function Home() {
         <Layout>
             <div className="min-h-screen flex flex-col">
                 <div className="flex justify-center w-full mt-6 font-orbitron">
-                    <div className="flex w-full max-w-7xl">
+                    <div className="flex w-full max-w-7xl flex-wrap">
+                        {" "}
+                        {/* Added flex-wrap to allow wrapping */}
                         {/* Sidebar Filters */}
-                        <div className="w-1/4 p-4 border-r border-gray-200">
+                        <div className="w-full lg:w-1/4 p-4 border-b lg:border-r lg:border-b-0 border-gray-200">
                             <h3 className="font-semibold mb-4">Filters</h3>
                             {/* Category Filter */}
                             <div className="mb-4">
@@ -162,9 +164,8 @@ function Home() {
                                 </div>
                             </div>
                         </div>
-
                         {/* Job Listings */}
-                        <div className=" p-4 w-full">
+                        <div className="p-4 w-full lg:w-3/4">
                             <div className="mb-4">
                                 <input
                                     type="text"

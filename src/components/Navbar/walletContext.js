@@ -209,7 +209,7 @@ export const WalletProvider = ({ children }) => {
                         // Fetch the user details from the database
                         try {
                             const response = await axios.post(
-                                "http://localhost:3001/usersJobs/create-or-get-user",
+                                "https://dapp.blockworkprotocol.xyz/api/usersJobs/create-or-get-user",
                                 { walletAddress: account }
                             );
                             const userData = response.data;
@@ -248,7 +248,7 @@ export const WalletProvider = ({ children }) => {
                 // Fetch updated user data for the new wallet address
                 try {
                     const response = await axios.post(
-                        "http://localhost:3001/usersJobs/create-or-get-user",
+                        "https://dapp.blockworkprotocol.xyz/api/usersJobs/create-or-get-user",
                         { walletAddress: account }
                     );
                     updateUserProfile(response.data);
